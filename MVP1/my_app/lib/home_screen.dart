@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+import 'main.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'routine_model.dart';
+import 'custom_colors.dart';
 import 'notification_service.dart';
+import 'package:provider/provider.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -8,35 +12,46 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  final List<Routine> routines = [];
+  String data = '';
   final _nameController = TextEditingController();
   final _durationController = TextEditingController();
   final _descriptionController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    loadData();
+  }
+
+  void saveData() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString('data', data);
+  }
+
+  void loadData() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      data = prefs.getString('data') ?? '';
+    });
+  }
 
   void _addRoutine() {
     final name = _nameController.text;
     final duration = int.tryParse(_durationController.text) ?? 0;
     final description = _descriptionController.text;
 
-    if (name.isNotEmpty && duration > 0) {
-      final routine = Routine(name: name, duration: duration, description: description);
-      setState(() {
-        routines.add(routine);
-      });
+    final routine =
+        Routine(name: name, duration: duration, description: description);
 
-      NotificationService().scheduleNotification(routine);
-
-      _nameController.clear();
-      _durationController.clear();
-      _descriptionController.clear();
-    }
+    Provider.of<RoutineModel>(context, listen: false).addRoutine(routine);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Routine Manager', style: Theme.of(context).textTheme.headlineSmall),
+        title: Text('Routine Manager',
+            style: Theme.of(context).textTheme.headlineSmall),
         backgroundColor: Theme.of(context).primaryColor,
       ),
       body: Padding(
@@ -52,7 +67,8 @@ class _HomeScreenState extends State<HomeScreen> {
                   borderSide: BorderSide(color: Theme.of(context).primaryColor),
                 ),
                 focusedBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: Theme.of(context).colorScheme.secondary),
+                  borderSide: BorderSide(
+                      color: Theme.of(context).colorScheme.secondary),
                 ),
               ),
             ),
@@ -65,7 +81,8 @@ class _HomeScreenState extends State<HomeScreen> {
                   borderSide: BorderSide(color: Theme.of(context).primaryColor),
                 ),
                 focusedBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: Theme.of(context).colorScheme.secondary),
+                  borderSide: BorderSide(
+                      color: Theme.of(context).colorScheme.secondary),
                 ),
               ),
               keyboardType: TextInputType.number,
@@ -79,7 +96,8 @@ class _HomeScreenState extends State<HomeScreen> {
                   borderSide: BorderSide(color: Theme.of(context).primaryColor),
                 ),
                 focusedBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: Theme.of(context).colorScheme.secondary),
+                  borderSide: BorderSide(
+                      color: Theme.of(context).colorScheme.secondary),
                 ),
               ),
             ),
@@ -94,14 +112,17 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             Expanded(
               child: ListView.builder(
-                itemCount: routines.length,
+                itemCount: Provider.of<RoutineModel>(context).routines.length,
                 itemBuilder: (context, index) {
-                  final routine = routines[index];
+                  final routine = Provider.of<RoutineModel>(context).routines[index];
                   return Card(
                     margin: EdgeInsets.symmetric(vertical: 8.0),
                     child: ListTile(
-                      title: Text(routine.name, style: TextStyle(color: Theme.of(context).primaryColor)),
-                      subtitle: Text('${routine.duration} minutes - ${routine.description}'),
+                      title: Text(routine.name,
+                          style:
+                              TextStyle(color: Theme.of(context).primaryColor)),
+                      subtitle: Text(
+                          '${routine.duration} minutes - ${routine.description}'),
                       tileColor: Theme.of(context).colorScheme.background,
                     ),
                   );
