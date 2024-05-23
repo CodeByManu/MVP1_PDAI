@@ -3,7 +3,7 @@ import 'home_screen.dart';
 import 'notification_service.dart';
 import 'pantallaprincipal.dart';
 import 'custom_colors.dart'; // Importa el archivo de colores
-import 'routine_model.dart'; // Importa el modelo de rutinas
+import 'models/routine_model.dart'; // Importa el modelo de rutinas
 import 'package:provider/provider.dart';
 
 

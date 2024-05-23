@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'routine_model.dart';
+import 'models/routine_model.dart';
 import 'notification_service.dart';
 
 class PantallaPrincipal extends StatefulWidget {
@@ -22,6 +22,12 @@ class _PantallaPrincipalState extends State<PantallaPrincipal> {
               Navigator.pushNamed(context, '/home_screen');
             },
           ),
+          ListTile(
+            title: Text('Settings'),
+            onTap: () {
+              // Navigator.pushNamed(context, '/settings');
+            },
+          )
           // Agrega más ListTile aquí para más enlaces
         ],
       ),

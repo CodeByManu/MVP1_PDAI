@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'main.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'routine_model.dart';
+import 'models/routine_model.dart';
 import 'custom_colors.dart';
 import 'notification_service.dart';
 import 'package:provider/provider.dart';
@@ -129,6 +129,19 @@ class _HomeScreenState extends State<HomeScreen> {
                 },
               ),
             ),
+            SizedBox(height: 20),
+            Consumer<RoutineModel>(
+              builder: (context, routineModel, child) {
+                return Text(
+                  'Total Duration: ${routineModel.routines.fold(0, (total, routine) => total + routine.duration)} minutes',
+                  style: TextStyle(
+                    color: Theme.of(context).primaryColor,
+                    fontWeight: FontWeight.bold,
+                  ),
+                );
+              },
+            ),
+            
           ],
         ),
       ),
