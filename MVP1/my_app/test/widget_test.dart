@@ -7,9 +7,11 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:my_app/User/user_model.dart';
+import 'package:my_app/login_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:my_app/main.dart';
-import 'package:my_app/home_screen.dart';
+import 'package:my_app/Routines/add_routine.dart';
 
 void main() {
   testWidgets('RoutineModel updates when a routine is added',
@@ -17,9 +19,9 @@ void main() {
     // Build our app and trigger a frame.
     await tester.pumpWidget(
       ChangeNotifierProvider(
-        create: (context) => RoutineModel(),
+        create: (context) => UserSession(),
         child: MaterialApp(
-          home: HomeScreen(),
+          home: LoginScreen(),
         ),
       ),
     );

@@ -1,36 +1,44 @@
 import 'package:flutter/material.dart';
-import 'home_screen.dart';
-import 'notification_service.dart';
+import 'Routines/add_routine.dart';
+import 'Extras/notification_service.dart';
 import 'pantallaprincipal.dart';
-import 'custom_colors.dart'; // Importa el archivo de colores
-import 'models/routine_model.dart'; // Importa el modelo de rutinas
+import 'Extras/custom_colors.dart'; // Importa el archivo de colores
+import 'Routines/routine_model.dart'; // Importa el modelo de rutinas
 import 'package:provider/provider.dart';
+import 'Extras/settings.dart';
+import 'Routines/show_routines.dart';
+import 'login_screen.dart';
+import 'User/user_model.dart';
+import 'User/create_user.dart';
+import 'db/Database_helper.dart';
 
 
-class RoutineModel extends ChangeNotifier {
-  List<Routine> _routines = [];
 
-  List<Routine> get routines => _routines;
-
-  void addRoutine(Routine routine) {
-    _routines.add(routine);
-    notifyListeners();
-  }
-}
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   NotificationService().initNotification();
   runApp(
-    ChangeNotifierProvider(
-      create: (context) => RoutineModel(),
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (context) => UserSession()),
+      ],
       child: MaterialApp(
         title: 'Mi Aplicación',
         initialRoute: '/', // Esta es la ruta que se carga primero
         routes: {
-          '/': (context) => PantallaPrincipal(), // Esta es tu pantalla principal
-          '/home_screen': (context) =>
-              HomeScreen(), // Esta es la ruta para la pantalla que mostraste
+          '/': (context) =>
+              LoginScreen(), // Esta es tu pantalla principal
+          '/create_user': (context) =>
+              CreateUser(), // Esta es la ruta para la pantalla de crear usuario
+          '/main': (context) =>
+              PantallaPrincipal(), // Esta es la ruta para la pantalla principal
+          '/main/settings': (context) =>
+              SettingsScreen(), // Esta es la ruta para la pantalla de configuración
+          '/main/show_routines': (context) =>
+              ShowRoutines(), // Esta es la ruta para la pantalla de rutinas
+          '/main/show_routines/add_routine': (context) =>
+              AdRoutine(), // Esta es la ruta para la pantalla de agregar rutinas
         },
       ),
     ),
@@ -55,13 +63,13 @@ class MyApp extends StatelessWidget {
           onBackground: Colors.black,
           onSurface: Colors.black,
         ),
-        textTheme: TextTheme(
-          headlineSmall: TextStyle(
+        textTheme: const TextTheme(
+          headlineSmall:  TextStyle(
               color: Color(0xFF3E2723),
               fontWeight: FontWeight.bold), // Marrón oscuro
           bodyMedium: TextStyle(color: Color(0xFF3E2723)), // Marrón oscuro
         ),
-        buttonTheme: ButtonThemeData(
+        buttonTheme:const ButtonThemeData(
           buttonColor: Color(0xFF795548), // Marrón
           textTheme: ButtonTextTheme.primary,
         ),
@@ -72,7 +80,7 @@ class MyApp extends StatelessWidget {
           ),
         ),
       ),
-      home: HomeScreen(),
+      home: PantallaPrincipal(),
     );
   }
 }
