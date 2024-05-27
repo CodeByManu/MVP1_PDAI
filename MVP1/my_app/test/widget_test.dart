@@ -10,8 +10,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:my_app/User/user_model.dart';
 import 'package:my_app/login_screen.dart';
 import 'package:provider/provider.dart';
-import 'package:my_app/main.dart';
-import 'package:my_app/Routines/add_routine.dart';
+// import 'package:my_app/main.dart';
+// import 'package:my_app/Routines/add_routine.dart';
 
 void main() {
   testWidgets('RoutineModel updates when a routine is added',

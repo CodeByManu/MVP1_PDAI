@@ -1,12 +1,12 @@
-import '../main.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+// import '../main.dart';
+// import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'routine_model.dart';
-import '../Extras/custom_colors.dart';
-import '../Extras/notification_service.dart';
-import 'package:provider/provider.dart';
-import 'package:flutter/material.dart';
+// import '../Extras/custom_colors.dart';
+// import '../Extras/notification_service.dart';
+// import 'package:provider/provider.dart';
+// import 'package:flutter/material.dart';
 import '../db/Database_helper.dart';
 import '../User/user_model.dart';
 
@@ -157,7 +157,7 @@ class _AdRoutine extends State<AdRoutine> {
                 itemBuilder: (context, index) {
                   final routine = routines[index];
                   return Card(
-                    margin: EdgeInsets.symmetric(vertical: 8.0),
+                    margin: const EdgeInsets.symmetric(vertical: 8.0),
                     child: ListTile(
                       title: Text(routine['name'].toString(),
                           style:
@@ -165,13 +165,13 @@ class _AdRoutine extends State<AdRoutine> {
                       subtitle: Text(
                           '${routine['duration'].toString()} minutes - ${routine['description'].toString()}- ${routine['weekday'].toString()} '),
                       trailing: IconButton(
-                        icon: Icon(Icons.delete),
+                        icon: const Icon(Icons.delete),
                         onPressed: () {
                           DatabaseHelper().deleteRoutine(routine['id'], userSettings?.username);
                           loadRoutines();
                         },
                       ),
-                      tileColor: Theme.of(context).colorScheme.background,
+                      tileColor: Theme.of(context).colorScheme.secondary,
                     ),
                   );
                 },

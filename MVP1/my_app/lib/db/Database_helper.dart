@@ -1,8 +1,8 @@
-import 'package:path/path.dart';
+import 'package:path/path.dart' as p;
 import 'package:sqflite/sqflite.dart';
 import 'package:path_provider/path_provider.dart';
 import '../User/user_model.dart';
-import '../Routines/routine_model.dart';
+//import '../Routines/routine_model.dart';
 import 'dart:io' as io;
 
 class DatabaseHelper {
@@ -17,16 +17,10 @@ class DatabaseHelper {
   }
 
   DatabaseHelper.internal();
-  void printDb() async {
-    final directory = await getApplicationDocumentsDirectory();
-
-    final path = join(directory.path, 'routineDB');
-    print(path);
-  }
 
   setDB() async {
     io.Directory directory = await getApplicationDocumentsDirectory();
-    String path = join(directory.path, 'routineDB');
+    String path = p.join(directory.path, 'routineDB');
     var dB = await openDatabase(path, version: 3, onCreate: _onCreate);
 
     return dB;

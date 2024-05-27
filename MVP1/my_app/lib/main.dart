@@ -3,14 +3,14 @@ import 'Routines/add_routine.dart';
 import 'Extras/notification_service.dart';
 import 'pantallaprincipal.dart';
 import 'Extras/custom_colors.dart'; // Importa el archivo de colores
-import 'Routines/routine_model.dart'; // Importa el modelo de rutinas
+// import 'Routines/routine_model.dart'; // Importa el modelo de rutinas
 import 'package:provider/provider.dart';
 import 'Extras/settings.dart';
 import 'Routines/show_routines.dart';
 import 'login_screen.dart';
 import 'User/user_model.dart';
 import 'User/create_user.dart';
-import 'db/Database_helper.dart';
+// import 'db/Database_helper.dart';
 
 
 

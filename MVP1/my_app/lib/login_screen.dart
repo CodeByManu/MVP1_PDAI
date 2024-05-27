@@ -61,7 +61,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       );
                        Provider.of<UserSession>(context, listen: false).setUser(userSettings);
                        Navigator.pushNamed(context, '/main');
-                      // TODO: Navigate to the next screen
+                      
                     } else {
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(content: Text('Incorrect password')),
