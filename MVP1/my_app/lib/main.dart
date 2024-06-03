@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'Routines/add_routine.dart';
+import 'Activities/add_activitie.dart';
 import 'Extras/notification_service.dart';
 import 'pantallaprincipal.dart';
 import 'Extras/custom_colors.dart'; // Importa el archivo de colores
@@ -10,25 +10,25 @@ import 'Routines/show_routines.dart';
 import 'login_screen.dart';
 import 'User/user_model.dart';
 import 'User/create_user.dart';
+import 'package:alarm/alarm.dart';
+import 'alarm/alarm_setter.dart';
 // import 'db/Database_helper.dart';
 
-
-
-
-void main() {
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  NotificationService().initNotification();
+  //NotificationService().initNotification();
+  await Alarm.init();
   runApp(
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (context) => UserSession()),
       ],
       child: MaterialApp(
+        //debugShowCheckedModeBanner: false,
         title: 'Mi Aplicación',
         initialRoute: '/', // Esta es la ruta que se carga primero
         routes: {
-          '/': (context) =>
-              LoginScreen(), // Esta es tu pantalla principal
+          '/': (context) => LoginScreen(), // Esta es tu pantalla principal
           '/create_user': (context) =>
               CreateUser(), // Esta es la ruta para la pantalla de crear usuario
           '/main': (context) =>
@@ -37,8 +37,10 @@ void main() {
               SettingsScreen(), // Esta es la ruta para la pantalla de configuración
           '/main/show_routines': (context) =>
               ShowRoutines(), // Esta es la ruta para la pantalla de rutinas
-          '/main/show_routines/add_routine': (context) =>
-              AdRoutine(), // Esta es la ruta para la pantalla de agregar rutinas
+          //'/main/show_routines/add_routine': (context) =>
+          //    AdRoutine(), // Esta es la ruta para la pantalla de agregar rutinas
+          '/main/alarms': (context) =>
+              ExampleAlarmHomeScreen(), // Esta es la ruta para la pantalla de alarmas
         },
       ),
     ),
@@ -64,12 +66,12 @@ class MyApp extends StatelessWidget {
           onSurface: Colors.black,
         ),
         textTheme: const TextTheme(
-          headlineSmall:  TextStyle(
+          headlineSmall: TextStyle(
               color: Color(0xFF3E2723),
               fontWeight: FontWeight.bold), // Marrón oscuro
           bodyMedium: TextStyle(color: Color(0xFF3E2723)), // Marrón oscuro
         ),
-        buttonTheme:const ButtonThemeData(
+        buttonTheme: const ButtonThemeData(
           buttonColor: Color(0xFF795548), // Marrón
           textTheme: ButtonTextTheme.primary,
         ),

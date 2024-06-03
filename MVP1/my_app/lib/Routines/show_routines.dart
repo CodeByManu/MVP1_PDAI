@@ -8,6 +8,8 @@ import 'package:provider/provider.dart';
 // import '../Extras/notification_service.dart';
 import '../db/Database_helper.dart';
 import '../User/user_model.dart';
+import 'add_routine.dart';
+import 'show_routine.dart';
 
 class ShowRoutines extends StatefulWidget {
   @override
@@ -18,7 +20,6 @@ class _ShowRoutines extends State<ShowRoutines> {
   @override
   void initState() {
     super.initState();
-    loadRoutines();
   }
 
   List<Map<String, dynamic>> routines = [];
@@ -27,7 +28,6 @@ class _ShowRoutines extends State<ShowRoutines> {
   void didChangeDependencies() {
     super.didChangeDependencies();
     userSettings = Provider.of<UserSession>(context).getUser();
-    loadRoutines();
   }
 
   void loadRoutines() async {
@@ -37,55 +37,152 @@ class _ShowRoutines extends State<ShowRoutines> {
 
   @override
   Widget build(BuildContext context) {
-    loadRoutines();
     return Scaffold(
       appBar: AppBar(
         title: const Text('Ver Rutinas',
             style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-        backgroundColor: Theme.of(context).primaryColor,
+        backgroundColor: Colors.lightBlue,
         shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.vertical(
             bottom: Radius.circular(30),
           ),
         ),
+        actions: <Widget>[
+          IconButton(
+            icon: const Icon(Icons.home),
+            onPressed: () {
+              Navigator.pushNamed(context,
+                  "/main"); // Replace MainMenu with your main menu widget
+            },
+          ),
+        ],
       ),
-      
       body: ListView(
-        
         children: <Widget>[
           const SizedBox(height: 40),
           ExpansionTile(
-            title: const Text('Monday'),
+            tilePadding: const EdgeInsets.all(0),
+            title: Container(
+              decoration: BoxDecoration(
+                color: Colors.red[100],
+                border: Border(
+                  bottom: BorderSide(color: Colors.grey[300]!),
+                ),
+              ),
+              child: const Padding(
+                padding: EdgeInsets.all(16.0),
+                child: Text('Monday'),
+              ),
+            ),
+            backgroundColor: Colors.red[100],
             children: _buildRoutinesForDay('Monday'),
           ),
           const SizedBox(height: 5),
           ExpansionTile(
-            title: const Text('Tuesday'),
+            tilePadding: const EdgeInsets.all(0),
+            title: Container(
+              decoration: BoxDecoration(
+                color: Colors.orange[100],
+                border: Border(
+                  bottom: BorderSide(color: Colors.grey[300]!),
+                ),
+              ),
+              child: const Padding(
+                padding: EdgeInsets.all(16.0),
+                child: Text('Tuesday'),
+              ),
+            ),
+            backgroundColor: Colors.orange[100],
             children: _buildRoutinesForDay('Tuesday'),
           ),
           const SizedBox(height: 5),
           ExpansionTile(
-            title: const Text('Wednesday'),
+            tilePadding: const EdgeInsets.all(0),
+            title: Container(
+              decoration: BoxDecoration(
+                color: Colors.yellow[100],
+                border: Border(
+                  bottom: BorderSide(color: Colors.grey[300]!),
+                ),
+              ),
+              child: const Padding(
+                padding: EdgeInsets.all(16.0),
+                child: Text('Wednesday'),
+              ),
+            ),
+            backgroundColor: Colors.yellow[100],
             children: _buildRoutinesForDay('Wednesday'),
           ),
           const SizedBox(height: 5),
           ExpansionTile(
-            title: const Text('Thursday'),
+            tilePadding: const EdgeInsets.all(0),
+            title: Container(
+              decoration: BoxDecoration(
+                color: Colors.purple[100],
+                border: Border(
+                  bottom: BorderSide(color: Colors.grey[300]!),
+                ),
+              ),
+              child: const Padding(
+                padding: EdgeInsets.all(16.0),
+                child: Text('Thursday'),
+              ),
+            ),
+            backgroundColor: Colors.purple[100],
             children: _buildRoutinesForDay('Thursday'),
           ),
           const SizedBox(height: 5),
           ExpansionTile(
-            title: const Text('Friday'),
+            tilePadding: const EdgeInsets.all(0),
+            title: Container(
+              decoration: BoxDecoration(
+                color: Colors.green[100],
+                border: Border(
+                  bottom: BorderSide(color: Colors.grey[300]!),
+                ),
+              ),
+              child: const Padding(
+                padding: EdgeInsets.all(16.0),
+                child: Text('Friday'),
+              ),
+            ),
+            backgroundColor: Colors.green[100],
             children: _buildRoutinesForDay('Friday'),
           ),
           const SizedBox(height: 5),
           ExpansionTile(
-            title: const Text('Saturday'),
+            tilePadding: const EdgeInsets.all(0),
+            title: Container(
+              decoration: BoxDecoration(
+                color: Colors.blue[100],
+                border: Border(
+                  bottom: BorderSide(color: Colors.grey[300]!),
+                ),
+              ),
+              child: const Padding(
+                padding: EdgeInsets.all(16.0),
+                child: Text('Saturday'),
+              ),
+            ),
+            backgroundColor: Colors.blue[100],
             children: _buildRoutinesForDay('Saturday'),
           ),
           const SizedBox(height: 5),
           ExpansionTile(
-            title: const Text('Sunday'),
+            tilePadding: const EdgeInsets.all(0),
+            title: Container(
+              decoration: BoxDecoration(
+                color: Colors.grey[100],
+                border: Border(
+                  bottom: BorderSide(color: Colors.grey[300]!),
+                ),
+              ),
+              child: const Padding(
+                padding: EdgeInsets.all(16.0),
+                child: Text('Sunday'),
+              ),
+            ),
+            backgroundColor: Colors.grey[100],
             children: _buildRoutinesForDay('Sunday'),
           ),
         ],
@@ -104,45 +201,64 @@ class _ShowRoutines extends State<ShowRoutines> {
       'Sunday': 7,
     };
 
+    int weekdayInde = days[weekday]!;
+
     loadRoutines();
-    int totalDuration = 0;
-    for (var routine in routines) {
-      if (int.parse(routine['weekday']) == days[weekday]) {
-        totalDuration += int.parse(routine['duration'].toString());
-      }
-    }
 
     List<Widget> widgets = routines.map((routine) {
-      if (int.parse(routine['weekday']) != days[weekday]) {
+      const SizedBox.shrink();
+      if (routine['weekday'] != days[weekday]) {
         return const SizedBox.shrink();
       }
-      return ListTile(
-        title: Text(routine['name'].toString()),
-        subtitle: Text(
-            '${routine['description'].toString()} - ${routine['duration'].toString()} min',
-            style: TextStyle(color: Theme.of(context).primaryColor)),
-        trailing: IconButton(
-          icon: const Icon(Icons.delete),
-          onPressed: () {
-            DatabaseHelper()
-                .deleteRoutine(routine['id'], userSettings?.username);
-            loadRoutines();
-          },
+      return Container(
+        decoration: BoxDecoration(
+          border: Border(
+            bottom: BorderSide(color: Colors.grey[300]!),
+          ),
+        ),
+        child: ListTile(
+          title: Text(routine['name']),
+          subtitle: Text(routine['destination']),
+          trailing: IconButton(
+            icon: const Icon(Icons.delete),
+            onPressed: () {
+              DatabaseHelper()
+                  .deleteRoutine(routine['routineId'], userSettings?.username);
+              loadRoutines();
+            },
+          ),
+          onTap: () => Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => ShowRoutine(routineId: routine['routineId'])),
+          ),
         ),
       );
     }).toList();
 
-    widgets.add(
-      ListTile(
-        title: Text('Total duration: $totalDuration min'),
-      ),
-    );
+
+
+    // widgets.add(
+    //   Container(
+    //     decoration: BoxDecoration(
+    //       border: Border(
+    //         bottom: BorderSide(color: Colors.grey[300]!),
+    //       ),
+    //     ),
+    //     child:
+    //   ListTile(
+    //     title: Text('Total duration: $totalDuration min'),
+    //   ),
+    // ),
+    // );
     widgets.add(
       ListTile(
         title: const Text('Add Routine'),
         onTap: () {
           loadRoutines();
-          Navigator.pushNamed(context, '/main/show_routines/add_routine');
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => AddRoutine(weekdayIndex: weekdayInde)));
         },
       ),
     );

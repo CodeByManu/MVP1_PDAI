@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 //import 'Extras/notification_service.dart';
 import 'package:provider/provider.dart';
-import'User/user_model.dart';
+import 'User/user_model.dart';
 
 class PantallaPrincipal extends StatefulWidget {
   @override
@@ -15,79 +15,158 @@ class _PantallaPrincipalState extends State<PantallaPrincipal> {
     super.didChangeDependencies();
     userSettings = Provider.of<UserSession>(context).getUser();
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text('Menú Principal ${userSettings?.username}',
-        style: Theme.of(context).textTheme.headlineSmall),
-        backgroundColor: Theme.of(context).primaryColor,
+            style: Theme.of(context).textTheme.headlineSmall),
+        backgroundColor: Colors.lightBlue,
         shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.vertical(
             bottom: Radius.circular(30),
           ),
         ),
       ),
-      body: ListView(
+      body: Padding(
+  padding: const EdgeInsets.all(8.0),
+  child: Column(
+    children: <Widget>[
+      const SizedBox(height: 25),
+      Row(
         children: <Widget>[
-          const SizedBox(height: 25),
-          ListTile(
-            title: const Text('Ver Rutinas'),
-            onTap: () {
-              Navigator.pushNamed(context, '/main/show_routines');
-            },
-            tileColor: Colors.blue,
-            hoverColor: Colors.lightGreen,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10.0),
+          Expanded(
+            child: Card(
+              child: ListTile(
+                leading: const Icon(Icons.home),
+                title: const Text('Ver Rutinas'),
+                onTap: () {
+                  Navigator.pushNamed(context, '/main/show_routines');
+                },
+                hoverColor: Colors.lightGreen,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10.0),
+                ),
+              ),
             ),
-            contentPadding: const EdgeInsets.all(10.0),
-            minTileHeight: 50.0,
-            minLeadingWidth: 60.0,
-            horizontalTitleGap: 10,
           ),
-          const SizedBox(height: 40),
-          
-          ListTile(
-            title: const Text('Settings'),
-            onTap: () {
-              Navigator.pushNamed(context, '/main/settings');},
-            tileColor: Colors.blue,
-            hoverColor: Colors.lightGreen,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10.0),
+          Expanded(
+            child: Card(
+              child: ListTile(
+                leading: const Icon(Icons.settings),
+                title: const Text('Settings'),
+                onTap: () {
+                  Navigator.pushNamed(context, '/main/settings');
+                },
+                hoverColor: Colors.lightGreen,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10.0),
+                ),
+                // Add your onTap function here
+              ),
             ),
-            contentPadding: const EdgeInsets.all(10.0),
-            minTileHeight: 50.0,
-            minLeadingWidth: 60.0,
-            horizontalTitleGap: 10,
-            
-            
-          
           ),
-          const SizedBox(height: 40),
-          
-          //const SizedBox(height: 40),
-          ListTile(
-            title: const Text('Cerrar Sesión'),
-            onTap: () {
-              Navigator.pushNamed(context, '/');
-            },
-            tileColor: Colors.blue,
-            hoverColor: Colors.lightGreen,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10.0),
-            ),
-            contentPadding: const EdgeInsets.all(10.0),
-            minTileHeight: 50.0,
-            minLeadingWidth: 60.0,
-            horizontalTitleGap: 10,
-          
-          ),
-
-          // Agrega más ListTile aquí para más enlaces
         ],
       ),
+      const SizedBox(height: 15),
+      Row(
+        children: <Widget>[
+          Expanded(
+            child: Card(
+              child: ListTile(
+                leading: const Icon(Icons.alarm),
+                title: const Text('Alarm'),
+                onTap: () {
+                  Navigator.pushNamed(context, '/main/alarms');
+                },
+                hoverColor: Colors.lightGreen,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10.0),
+                ),
+                // Add your onTap function here
+              ),
+            ),
+          ),
+          Expanded(
+            child: Card(
+              child: ListTile(
+                leading: const Icon(Icons.calendar_today),
+                title: const Text('Calendar'),
+                onTap: () {
+                  Navigator.pushNamed(context, '/main/calendar');
+                },
+                hoverColor: Colors.lightGreen,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10.0),
+                ),
+                // Add your onTap function here
+              ),
+            ),
+          ),
+        ],
+      ),
+      const SizedBox(height: 15),
+      Row(
+        children: <Widget>[
+          Expanded(
+            child: Card(
+              child: ListTile(
+                leading: const Icon(Icons.notifications),
+                title: const Text('Notifications'),
+                onTap: () {
+                  Navigator.pushNamed(context, '/main/notifications');
+                },
+                hoverColor: Colors.lightGreen,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10.0),
+                ),
+                // Add your onTap function here
+              ),
+            ),
+          ),
+          Expanded(
+            child: Card(
+              child: ListTile(
+                leading: const Icon(Icons.person),
+                title: const Text('Profile'),
+                onTap: () {
+                  Navigator.pushNamed(context, '/main/profile');
+                },
+                hoverColor: Colors.lightGreen,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10.0),
+                ),
+                // Add your onTap function here
+              ),
+            ),
+          ),
+        ],
+      ),
+      const SizedBox(height: 15),
+      Row(children: <Widget>[
+        Expanded(
+          child: Card(
+            child: ListTile(
+              leading: const Icon(Icons.logout),
+              title: const Text('Logout'),
+              onTap: () {
+                Navigator.pushNamed(context, '/');
+              },
+              hoverColor: Colors.lightGreen,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10.0),
+              ),
+              // Add your onTap function here
+            ),
+          ),
+        ),
+      ],
+      )
+    ],
+    
+  ),
+),
     );
   }
 }

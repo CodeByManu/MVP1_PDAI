@@ -31,22 +31,54 @@ class DatabaseHelper {
       'CREATE TABLE user_settings(username TEXT PRIMARY KEY, email TEXT, password TEXT, language TEXT, transportationType TEXT, alarmType TEXT)',
     );
     await db.execute(
-      'CREATE TABLE routine(id INTEGER PRIMARY KEY, userId TEXT, name TEXT, description TEXT, duration INTEGER, weekday TEXT, FOREIGN KEY(userId) REFERENCES user_settings(username))',
+      'CREATE TABLE routine(routineId INTEGER PRIMARY KEY, username TEXT, name TEXT, weekday INTEGER, destination TEXT,FOREIGN KEY(username) REFERENCES user_settings(username))',
+    );
+    await db.execute(
+      'CREATE TABLE activitie(id INTEGER PRIMARY KEY, name TEXT, description TEXT, duration INTEGER, RoutineId INTEGER, FOREIGN KEY(RoutineId) REFERENCES routine(routineId))',
     );
   }
 
-  Future<int> saveRoutine(
-      Map<String, dynamic> routine, String? username) async {
+  Future<int> saveRoutine(String? username, String? name, int? weekday, String? destination) async {
     var dbClient = await db;
-    routine['userId'] = username; // Add the userId to the routine map
+    Map<String, dynamic> routine;
+    routine = {
+      'username': username,
+      'name': name,
+      'weekday': weekday,
+      'destination': destination,
+    };
     int res = await dbClient.insert('routine', routine);
+
     return res;
   }
 
-  Future<List<Map<String, dynamic>>> getRoutines(String? username) async {
+  Future<int> saveActivitie(
+      String? name, String? description, int? duration, int routineId) async {
     var dbClient = await db;
-    var result = await dbClient
-        .query("routine", where: 'userId = ?', whereArgs: [username]);
+    Map<String, dynamic> activitie;
+    activitie = {
+      'name': name,
+      'description': description,
+      'duration': duration,
+      'RoutineId': routineId,
+    };
+    int res = await dbClient.insert('activitie', activitie);
+
+    return res;
+  }
+
+  Future<List<Map<String, dynamic>>> getRoutines(
+      String? username) async {
+    var dbClient = await db;
+    var result = await dbClient.query("routine",
+        where: 'username = ?', whereArgs: [username]);
+    return result;
+  }
+
+  Future<List<Map<String, dynamic>>> getActivities(int routineId) async {
+    var dbClient = await db;
+    var result = await dbClient.query("activitie",
+        where: 'RoutineId = ?', whereArgs: [routineId]);
     return result;
   }
 
@@ -54,13 +86,26 @@ class DatabaseHelper {
       Map<String, dynamic> routine, String? username) async {
     var dbClient = await db;
     await dbClient.update('routine', routine,
-        where: 'id = ? AND userId = ?', whereArgs: [routine['id'], username]);
+        where: 'routineId = ? AND username = ?',
+        whereArgs: [routine['routineId'], username]);
+  }
+
+  Future<void> updateActivitie(
+      Map<String, dynamic> activitie, int? routineId) async {
+    var dbClient = await db;
+    await dbClient.update('activitie', activitie,
+        where: 'RoutineId = ?', whereArgs: [routineId]);
   }
 
   Future<void> deleteRoutine(int id, String? username) async {
     var dbClient = await db;
     await dbClient.delete('routine',
-        where: 'id = ? AND userId = ?', whereArgs: [id, username]);
+        where: 'routineId = ? AND username = ?', whereArgs: [id, username]);
+  }
+
+  Future<void> deleteActivitie(int id) async {
+    var dbClient = await db;
+    await dbClient.delete('activitie', where: 'id = ?', whereArgs: [id]);
   }
 
   Future<void> insertUserSettings(UserSettings userSettings) async {
@@ -82,6 +127,4 @@ class DatabaseHelper {
       throw Exception('No user found for username: $username');
     }
   }
-
-  // CRUD operations: create, read, update, delete
 }

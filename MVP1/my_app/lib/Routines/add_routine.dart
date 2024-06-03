@@ -2,7 +2,6 @@
 // import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'routine_model.dart';
 // import '../Extras/custom_colors.dart';
 // import '../Extras/notification_service.dart';
 // import 'package:provider/provider.dart';
@@ -10,193 +9,73 @@ import 'routine_model.dart';
 import '../db/Database_helper.dart';
 import '../User/user_model.dart';
 
+class AddRoutine extends StatefulWidget {
+  final int weekdayIndex;
 
-
-class AdRoutine extends StatefulWidget {
+  AddRoutine({required this.weekdayIndex});
   @override
-  _AdRoutine createState() => _AdRoutine();
+  _AddRoutine createState() => _AddRoutine();
 }
 
-class _AdRoutine extends State<AdRoutine> {
+class _AddRoutine extends State<AddRoutine> {
   final _nameController = TextEditingController();
-  final _durationController = TextEditingController();
-  final _descriptionController = TextEditingController();
-
+  final _destinationController = TextEditingController();
+  int get _weekdayIndex => widget.weekdayIndex;
   @override
   void initState() {
     super.initState();
-    loadRoutines();
   }
 
-  List<Map<String, dynamic>> routines = [];
-  UserSettings? userSettings;
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    userSettings = Provider.of<UserSession>(context).getUser();
-    loadRoutines();
-  }
-  void loadRoutines() async {
-    routines = await DatabaseHelper().getRoutines(userSettings?.username);
-    setState(() {});
-  }
-  int _selectedDay = 1;
-
-  void _handleDayChanged(int? newValue) {
-    setState(() {
-      _selectedDay = newValue ?? _selectedDay;
-      loadRoutines();
-    });
-  }
-  
   @override
   Widget build(BuildContext context) {
-    loadRoutines();
     return Scaffold(
       appBar: AppBar(
-        title: Text('Routine Manager',
+        title: Text('Add Routine',
             style: Theme.of(context).textTheme.headlineSmall),
         backgroundColor: Theme.of(context).primaryColor,
       ),
       body: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(8.0),
         child: Column(
-          children: [
+          children: <Widget>[
+            const SizedBox(height: 25),
             TextField(
               controller: _nameController,
-              decoration: InputDecoration(
-                labelText: 'Activity Name',
-                labelStyle: TextStyle(color: Theme.of(context).primaryColor),
-                enabledBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: Theme.of(context).primaryColor),
-                ),
-                focusedBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(
-                      color: Theme.of(context).colorScheme.secondary),
-                ),
+              decoration: const InputDecoration(
+                labelText: 'Name',
+                border: OutlineInputBorder(),
               ),
             ),
+            const SizedBox(height: 25),
             TextField(
-              controller: _durationController,
-              decoration: InputDecoration(
-                labelText: 'Duration (minutes)',
-                labelStyle: TextStyle(color: Theme.of(context).primaryColor),
-                enabledBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: Theme.of(context).primaryColor),
-                ),
-                focusedBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(
-                      color: Theme.of(context).colorScheme.secondary),
-                ),
-              ),
-              keyboardType: TextInputType.number,
-            ),
-            TextField(
-              controller: _descriptionController,
-              decoration: InputDecoration(
-                labelText: 'Description',
-                labelStyle: TextStyle(color: Theme.of(context).primaryColor),
-                enabledBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: Theme.of(context).primaryColor),
-                ),
-                focusedBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(
-                      color: Theme.of(context).colorScheme.secondary),
-                ),
+              controller: _destinationController,
+              decoration: const InputDecoration(
+                labelText: 'Destination',
+                border: OutlineInputBorder(),
               ),
             ),
-            Container(
-                height: 40.0,
-                padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                decoration: BoxDecoration(
-                  border: Border(
-                    bottom: BorderSide(
-                      color: Theme.of(context).primaryColor,
-                    ),
-                  ),
-                ),
-                child: DropdownButton<int>(
-                  isExpanded: true,
-                  value: _selectedDay,
-                  items: <int>[1, 2, 3, 4, 5, 6, 7].map<DropdownMenuItem<int>>((int value) {
-                    return DropdownMenuItem<int>(
-                      value: value,
-                      child: Text('Day $value'),
-                    );
-                  }).toList(),
-                  onChanged: _handleDayChanged,
-                ),
-              ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 25),
             ElevatedButton(
               onPressed: () async {
-                
-                  await DatabaseHelper().saveRoutine(
-                    Routine(
-                      name: _nameController.text, 
-                      duration: int.parse(_durationController.text), 
-                      description: _descriptionController.text, 
-                      weekday: _selectedDay
-                    ).toMap(), 
-                    userSettings?.username,
-                  );
-                
-                loadRoutines();
+                await DatabaseHelper().saveRoutine(
+                    Provider.of<UserSession>(context, listen: false).getUser()?.username,
+                    _nameController.text,
+                    _weekdayIndex,
+                    _destinationController.text,);
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Routine saved successfully')),
+                );
+                Navigator.pushNamed(context, "/main/show_routines");
+              
               },
               
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Theme.of(context).primaryColor,
-                foregroundColor: Colors.white,
-              ),
               child: const Text('Add Routine'),
             ),
-            
-            Expanded(
-              child: ListView.builder(
-                itemCount: routines.length,
-                itemBuilder: (context, index) {
-                  final routine = routines[index];
-                  return Card(
-                    margin: const EdgeInsets.symmetric(vertical: 8.0),
-                    child: ListTile(
-                      title: Text(routine['name'].toString(),
-                          style:
-                              TextStyle(color: Theme.of(context).primaryColor)),
-                      subtitle: Text(
-                          '${routine['duration'].toString()} minutes - ${routine['description'].toString()}- ${routine['weekday'].toString()} '),
-                      trailing: IconButton(
-                        icon: const Icon(Icons.delete),
-                        onPressed: () {
-                          DatabaseHelper().deleteRoutine(routine['id'], userSettings?.username);
-                          loadRoutines();
-                        },
-                      ),
-                      tileColor: Theme.of(context).colorScheme.secondary,
-                    ),
-                  );
-                },
-              ),
-            ),
-            const SizedBox(height: 20),
-            Provider<List<Map<String, dynamic>>>(
-              create: (_) => routines,
-              child: Consumer<List<Map<String, dynamic>>>(
-                builder: (context, routineList, child) {
-                  int totalDuration = routineList.fold(0, (total, routine) => total + int.parse(routine['duration'].toString()));
-                  return Text(
-                    'Total Duration: $totalDuration minutes',
-                    style: TextStyle(
-                      color: Theme.of(context).primaryColor,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  );
-                },
-              ),
-            ),
-            
           ],
         ),
       ),
     );
   }
+  
+
 }
