@@ -12,6 +12,7 @@ import 'User/user_model.dart';
 import 'User/create_user.dart';
 import 'package:alarm/alarm.dart';
 import 'alarm/alarm_setter.dart';
+import 'map/map.dart';
 // import 'db/Database_helper.dart';
 
 Future<void> main() async {
@@ -41,6 +42,8 @@ Future<void> main() async {
           //    AdRoutine(), // Esta es la ruta para la pantalla de agregar rutinas
           '/main/alarms': (context) =>
               ExampleAlarmHomeScreen(), // Esta es la ruta para la pantalla de alarmas
+          // '/main/map': (context) =>
+          //   MapScreen(wid:0), // Esta es la ruta para la pantalla de mapas
         },
       ),
     ),

@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
 class UserSettings {
   String language;
@@ -6,6 +8,8 @@ class UserSettings {
   String password;
   String email;
   String username;
+  double latitude;
+  double longitude;
 
   UserSettings({
     required this.language,
@@ -14,6 +18,8 @@ class UserSettings {
     required this.password,
     required this.email,
     required this.username,
+    required this.latitude,
+    required this.longitude,
   });
 
   Map<String, dynamic> toMap() {
@@ -24,6 +30,8 @@ class UserSettings {
       'password': password,
       'email': email,
       'username': username,
+      'latitude': latitude,
+      'longitude': longitude,
     };
   }
 
@@ -35,6 +43,8 @@ class UserSettings {
       password: map['password'],
       email: map['email'],
       username: map['username'],
+      latitude: map['latitude'],
+      longitude: map['longitude'],
     );
   }
 }
@@ -44,6 +54,11 @@ class UserSession extends ChangeNotifier {
 
   void setUser(UserSettings user) {
     _currentUser = user;
+    notifyListeners();
+  }
+
+  void removeUser() {
+    _currentUser = null;
     notifyListeners();
   }
 

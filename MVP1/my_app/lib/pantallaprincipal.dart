@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 //import 'Extras/notification_service.dart';
 import 'package:provider/provider.dart';
 import 'User/user_model.dart';
+import 'package:flutter/services.dart';
+import '../map/map.dart';
 
 class PantallaPrincipal extends StatefulWidget {
   @override
@@ -146,11 +148,28 @@ class _PantallaPrincipalState extends State<PantallaPrincipal> {
       const SizedBox(height: 15),
       Row(children: <Widget>[
         Expanded(
+            child: Card(
+              child: ListTile(
+                leading: const Icon(Icons.map),
+                title: const Text('Map'),
+                onTap: () {
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => const MapScreen(wid:1)));
+                },
+                hoverColor: Colors.lightGreen,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10.0),
+                ),
+                // Add your onTap function here
+              ),
+            ),
+          ),
+        Expanded(
           child: Card(
             child: ListTile(
               leading: const Icon(Icons.logout),
-              title: const Text('Logout'),
+              title: Text('Logout'),
               onTap: () {
+              Provider.of<UserSession>(context, listen: false).removeUser();
                 Navigator.pushNamed(context, '/');
               },
               hoverColor: Colors.lightGreen,
@@ -161,6 +180,8 @@ class _PantallaPrincipalState extends State<PantallaPrincipal> {
             ),
           ),
         ),
+
+
       ],
       )
     ],
@@ -170,3 +191,6 @@ class _PantallaPrincipalState extends State<PantallaPrincipal> {
     );
   }
 }
+
+
+

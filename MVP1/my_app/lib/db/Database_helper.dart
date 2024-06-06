@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:path/path.dart' as p;
 import 'package:sqflite/sqflite.dart';
 import 'package:path_provider/path_provider.dart';
@@ -28,17 +30,17 @@ class DatabaseHelper {
 
   void _onCreate(Database db, int version) async {
     await db.execute(
-      'CREATE TABLE user_settings(username TEXT PRIMARY KEY, email TEXT, password TEXT, language TEXT, transportationType TEXT, alarmType TEXT)',
+      'CREATE TABLE user_settings(username TEXT PRIMARY KEY, email TEXT, password TEXT, language TEXT, transportationType TEXT, alarmType TEXT, latitude INTEGER, longitude INTEGER)',
     );
     await db.execute(
-      'CREATE TABLE routine(routineId INTEGER PRIMARY KEY, username TEXT, name TEXT, weekday INTEGER, destination TEXT,FOREIGN KEY(username) REFERENCES user_settings(username))',
+      'CREATE TABLE routine(routineId INTEGER PRIMARY KEY, timeofarrival INTEGER, username TEXT, name TEXT, weekday INTEGER, destination TEXT, dep_lat INTEGER, dep_lon INTEGER, des_lat INTEGER, des_lon INTEGER, FOREIGN KEY(username) REFERENCES user_settings(username))',
     );
     await db.execute(
       'CREATE TABLE activitie(id INTEGER PRIMARY KEY, name TEXT, description TEXT, duration INTEGER, RoutineId INTEGER, FOREIGN KEY(RoutineId) REFERENCES routine(routineId))',
     );
   }
 
-  Future<int> saveRoutine(String? username, String? name, int? weekday, String? destination) async {
+  Future<int> saveRoutine(String? username, String? name, int? weekday, String? destination, double deslat, double deslon, double deplat, double deplon, int time) async {
     var dbClient = await db;
     Map<String, dynamic> routine;
     routine = {
@@ -46,6 +48,11 @@ class DatabaseHelper {
       'name': name,
       'weekday': weekday,
       'destination': destination,
+      'des_lat': deslat,
+      'des_lon': deslon,
+      'dep_lat': deplat,
+      'dep_lon': deplon,
+      'timeofarrival': time,
     };
     int res = await dbClient.insert('routine', routine);
 
@@ -127,4 +134,15 @@ class DatabaseHelper {
       throw Exception('No user found for username: $username');
     }
   }
+
+  Future<List<Map<String, Object?>>> getRoutinesLocations(String? username) async {
+    var dbClient = await db;
+    var result = await dbClient.query("routines",
+        columns: ['des_lat', 'des_lon'],
+        where: 'username = ?',
+        whereArgs: [username]);
+    return result;
+  }
+
+  
 }

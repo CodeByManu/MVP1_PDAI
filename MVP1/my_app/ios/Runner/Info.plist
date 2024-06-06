@@ -4,6 +4,23 @@
 <dict>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Necesitamos acceder a tu ubicación para mostrar el mapa</string>
+	<key>NSAppTransportSecurity</key>
+	<dict>
+	<key>NSExceptionDomains</key>
+	<dict>
+		<key>openstreetmap.org</key>
+		<dict>
+		<key>NSIncludesSubdomains</key>
+		<true/>
+		<key>NSTemporaryExceptionAllowsInsecureHTTPLoads</key>
+		<true/>
+		<key>NSTemporaryExceptionMinimumTLSVersion</key>
+		<string>TLSv1.2</string>
+		</dict>
+	</dict>
+	</dict>
 	<key>CFBundleDisplayName</key>
 	<string>My App</string>
 	<key>CFBundleExecutable</key>

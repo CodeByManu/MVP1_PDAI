@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:my_app/map/map.dart';
 import 'user_model.dart';
 import '../db/Database_helper.dart';
+import 'package:latlong2/latlong.dart';
+
 
 class CreateUser extends StatefulWidget {
   @override
@@ -16,7 +19,14 @@ class _CreateUserState extends State<CreateUser> {
     password: '',
     email: '',
     username: '',
+    latitude: 0,
+    longitude: 0,
   );
+
+  int prin(double? value) {
+    print(value);
+    return 0;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -65,6 +75,22 @@ class _CreateUserState extends State<CreateUser> {
                 _userSettings.password = value!;
               },
             ),
+            const SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: () async {
+                LatLng? result = await Navigator.push(
+                  context, 
+                  MaterialPageRoute(builder: (context) => const MapScreen(wid:0))
+                );
+
+                if (result != null) {
+                  _userSettings.latitude = result.latitude;
+                  _userSettings.longitude = result.longitude;
+                }
+              },
+              child: const Text('Select location'),
+            ),
+            const SizedBox(height: 20),
             ElevatedButton(
               onPressed: () async {
                 if (_formKey.currentState!.validate()) {
