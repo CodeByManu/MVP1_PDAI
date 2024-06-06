@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:my_app/Extras/notifications.dart';
 import 'Activities/add_activitie.dart';
 import 'Extras/notification_service.dart';
 import 'pantallaprincipal.dart';
@@ -13,6 +14,9 @@ import 'User/create_user.dart';
 import 'package:alarm/alarm.dart';
 import 'alarm/alarm_setter.dart';
 import 'map/map.dart';
+import 'extras/calendar.dart';
+import 'extras/notification_service.dart';
+import 'extras/profile.dart';
 // import 'db/Database_helper.dart';
 
 Future<void> main() async {
@@ -42,6 +46,12 @@ Future<void> main() async {
           //    AdRoutine(), // Esta es la ruta para la pantalla de agregar rutinas
           '/main/alarms': (context) =>
               ExampleAlarmHomeScreen(), // Esta es la ruta para la pantalla de alarmas
+          '/main/calendar': (context) =>
+              CalendarPage(), // Esta es la ruta para la pantalla de calendario
+          '/main/notifications': (context) =>
+              NotificationsScreen(), // Esta es la ruta para la pantalla de notificaciones
+          '/main/profile': (context) =>
+              ProfileScreen(), // Esta es la ruta para la pantalla de perfil
           // '/main/map': (context) =>
           //   MapScreen(wid:0), // Esta es la ruta para la pantalla de mapas
         },
